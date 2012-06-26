@@ -1,0 +1,1 @@
+/*** ³‹K‰»ƒ}ƒbƒv‚Ìì¬*/extern void makeNormalizeMap(GLubyte *tex[], int width, int height);
