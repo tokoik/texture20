@@ -1,1 +1,49 @@
-#include <stdio.h>#include <stdlib.h>#include <math.h>#if defined(WIN32)#  include "glut.h"#elif defined(__APPLE__) || defined(MACOSX)#  include <GLUT/glut.h>#else#  include <GL/glut.h>#endif#include "normalmap.h"/*** ‚‚³ƒ}ƒbƒv‚ğ‚à‚Æ‚É–@üƒ}ƒbƒv‚ğì¬‚·‚é*/void makeNormalMap(GLubyte *tex, int width, int height, double nz, const char *name){  FILE *fp = fopen(name, "rb");    if (fp) {		unsigned long size = width * height;    unsigned char *map = (unsigned char *)malloc(size);        if (map) {            /* ‚‚³ƒ}ƒbƒv‚ğ“Ç‚İ‚Ş */      fread(map, height, width, fp);      fclose(fp);            for (unsigned long y = 0; y < size; y += width) {        for (int x = 0; x < width; ++x) {          /* —×Ú‚·‚é‰æ‘f‚Æ‚Ì’l‚Ì·‚ğ–@üƒxƒNƒgƒ‹‚Ì¬•ª‚É—p‚¢‚é */          double nx = map[y + x] - map[y + (x + 1) % width];          double ny = map[y + x] - map[(y + width) % size + x];          /* –@üƒxƒNƒgƒ‹‚Ì’·‚³‚ğ‹‚ß‚Ä‚¨‚­ */          double nl = sqrt(nx * nx + ny * ny + nz * nz);                    *(tex++) = (GLubyte)(nx * 127.5 / nl + 127.5);          *(tex++) = (GLubyte)(ny * 127.5 / nl + 127.5);          *(tex++) = (GLubyte)(nz * 127.5 / nl + 127.5);          *(tex++) = 255;        }      }            free(map);    }  }}
+ï»¿#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#if defined(WIN32)
+#  include "glut.h"
+#elif defined(__APPLE__) || defined(MACOSX)
+#  include <GLUT/glut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
+#include "normalmap.h"
+
+/*
+** é«˜ã•ãƒãƒƒãƒ—ã‚’ã‚‚ã¨ã«æ³•ç·šãƒãƒƒãƒ—ã‚’ä½œæˆã™ã‚‹
+*/
+void makeNormalMap(GLubyte *tex, int width, int height, double nz, const char *name)
+{
+  FILE *fp = fopen(name, "rb");
+  
+  if (fp) {
+		unsigned long size = width * height;
+    unsigned char *map = (unsigned char *)malloc(size);
+    
+    if (map) {
+      
+      /* é«˜ã•ãƒãƒƒãƒ—ã‚’èª­ã¿è¾¼ã‚€ */
+      fread(map, height, width, fp);
+      fclose(fp);
+      
+      for (unsigned long y = 0; y < size; y += width) {
+        for (int x = 0; x < width; ++x) {
+          /* éš£æ¥ã™ã‚‹ç”»ç´ ã¨ã®å€¤ã®å·®ã‚’æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã®æˆåˆ†ã«ç”¨ã„ã‚‹ */
+          double nx = map[y + x] - map[y + (x + 1) % width];
+          double ny = map[y + x] - map[(y + width) % size + x];
+          /* æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã®é•·ã•ã‚’æ±‚ã‚ã¦ãŠã */
+          double nl = sqrt(nx * nx + ny * ny + nz * nz);
+          
+          *(tex++) = (GLubyte)(nx * 127.5 / nl + 127.5);
+          *(tex++) = (GLubyte)(ny * 127.5 / nl + 127.5);
+          *(tex++) = (GLubyte)(nz * 127.5 / nl + 127.5);
+          *(tex++) = 255;
+        }
+      }
+      
+      free(map);
+    }
+  }
+}

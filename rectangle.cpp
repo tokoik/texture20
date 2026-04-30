@@ -1,1 +1,73 @@
-#if defined(WIN32)#  include "glut.h"#  include "glext.h"extern PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;#elif defined(__APPLE__) || defined(MACOSX)#  include <GLUT/glut.h>#else#  define GL_GLEXT_PROTOTYPES#  include <GL/glut.h>#endif#include "rectangle.h"#include "matrix.h"/*** ‹éŒ`‚Ì•`‰æ*/void rectangle(double w, double h, const float l[]){  /* ’¸“_‚ÌÀ•W’l */  const GLdouble vertex[4][3] = {    { -w, -h, 0.0 },    {  w, -h, 0.0 },    {  w,  h, 0.0 },    { -w,  h, 0.0 }  };    /* ’¸“_‚ÌƒeƒNƒXƒ`ƒƒÀ•W */  static const GLdouble texcoord[4][2] = {    { 0.0, 0.0 }, { 1.0, 0.0 }, { 1.0, 1.0 }, { 0.0, 1.0 }  };    /* ŒõüƒxƒNƒgƒ‹‚ÌZo‚É—p‚¢‚é•Ï” */  double m[16], lpos[4] = { l[0], l[1], l[2], l[3] };    /* Œ»İ‚Ìƒ‚ƒfƒ‹ƒrƒ…[•ÏŠ·s—ñ‚ğ‹‚ß‚é */  glGetDoublev(GL_MODELVIEW_MATRIX, m);    /* Ú‹óŠÔ‚É‚¨‚¯‚éŒõŒ¹ˆÊ’u‚ğ‹‚ß‚é */  inverse(m, m);  transform(lpos, m, lpos);    /* •½sŒõü‚Å‚È‚¯‚ê‚ÎÀÀ•W‚ğ‹‚ß‚Ä‚¨‚­ */  if (lpos[3] != 0.0) {    lpos[0] /= lpos[3];    lpos[1] /= lpos[3];    lpos[2] /= lpos[3];  }    /* ‹éŒ`‚ğ•`‚­ */  glBegin(GL_QUADS);    for (int i = 0; i < 4; ++i) {    /* –@üƒ}ƒbƒv‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è‚·‚é */    glTexCoord2dv(texcoord[i]);        /* Ú‹óŠÔ‚É‚¨‚¯‚éŒõŒ¹‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ       ³‹K‰»ƒ}ƒbƒv‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚Éİ’è‚·‚é */    if (lpos[3] != 0.0) {      glMultiTexCoord3d(GL_TEXTURE1,        lpos[0] - vertex[i][0],        lpos[1] - vertex[i][1],        lpos[2] - vertex[i][2]);    }    else {      glMultiTexCoord3d(GL_TEXTURE1, lpos[0], lpos[1], lpos[2]);    }        /* ‘Î‰‚·‚é’¸“_À•W‚Ìw’è */    glVertex3dv(vertex[i]);  }  glEnd();}
+ï»¿#if defined(WIN32)
+#  include "glut.h"
+#  include "glext.h"
+extern PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
+#elif defined(__APPLE__) || defined(MACOSX)
+#  include <GLUT/glut.h>
+#else
+#  define GL_GLEXT_PROTOTYPES
+#  include <GL/glut.h>
+#endif
+
+#include "rectangle.h"
+#include "matrix.h"
+
+/*
+** çŸ©å½¢ã®æç”»
+*/
+void rectangle(double w, double h, const float l[])
+{
+  /* é ‚ç‚¹ã®åº§æ¨™å€¤ */
+  const GLdouble vertex[4][3] = {
+    { -w, -h, 0.0 },
+    {  w, -h, 0.0 },
+    {  w,  h, 0.0 },
+    { -w,  h, 0.0 }
+  };
+  
+  /* é ‚ç‚¹ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ */
+  static const GLdouble texcoord[4][2] = {
+    { 0.0, 0.0 }, { 1.0, 0.0 }, { 1.0, 1.0 }, { 0.0, 1.0 }
+  };
+  
+  /* å…‰ç·šãƒ™ã‚¯ãƒˆãƒ«ã®ç®—å‡ºã«ç”¨ã„ã‚‹å¤‰æ•° */
+  double m[16], lpos[4] = { l[0], l[1], l[2], l[3] };
+  
+  /* ç¾åœ¨ã®ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹ */
+  glGetDoublev(GL_MODELVIEW_MATRIX, m);
+  
+  /* æ¥ç©ºé–“ã«ãŠã‘ã‚‹å…‰æºä½ç½®ã‚’æ±‚ã‚ã‚‹ */
+  inverse(m, m);
+  transform(lpos, m, lpos);
+  
+  /* å¹³è¡Œå…‰ç·šã§ãªã‘ã‚Œã°å®Ÿåº§æ¨™ã‚’æ±‚ã‚ã¦ãŠã */
+  if (lpos[3] != 0.0) {
+    lpos[0] /= lpos[3];
+    lpos[1] /= lpos[3];
+    lpos[2] /= lpos[3];
+  }
+  
+  /* çŸ©å½¢ã‚’æã */
+  glBegin(GL_QUADS);
+  
+  for (int i = 0; i < 4; ++i) {
+    /* æ³•ç·šãƒãƒƒãƒ—ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®šã™ã‚‹ */
+    glTexCoord2dv(texcoord[i]);
+    
+    /* æ¥ç©ºé–“ã«ãŠã‘ã‚‹å…‰æºã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’
+       æ­£è¦åŒ–ãƒãƒƒãƒ—ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã«è¨­å®šã™ã‚‹ */
+    if (lpos[3] != 0.0) {
+      glMultiTexCoord3d(GL_TEXTURE1,
+        lpos[0] - vertex[i][0],
+        lpos[1] - vertex[i][1],
+        lpos[2] - vertex[i][2]);
+    }
+    else {
+      glMultiTexCoord3d(GL_TEXTURE1, lpos[0], lpos[1], lpos[2]);
+    }
+    
+    /* å¯¾å¿œã™ã‚‹é ‚ç‚¹åº§æ¨™ã®æŒ‡å®š */
+    glVertex3dv(vertex[i]);
+  }
+  glEnd();
+}

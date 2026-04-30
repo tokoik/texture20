@@ -1,1 +1,54 @@
-#include <math.h>#if defined(WIN32)#  include "glut.h"#elif defined(__APPLE__) || defined(MACOSX)#  include <GLUT/glut.h>#else#  include <GL/glut.h>#endif#include "normalizemap.h"/*** •ûŒüƒxƒNƒgƒ‹‚ğƒeƒNƒXƒ`ƒƒ’l‚É•ÏŠ·‚·‚é*/static void vec2tex(float nx, float ny, float nz, GLubyte tex[]) {  tex[0] = (GLubyte)(nx * 127.5 + 127.5);  tex[1] = (GLubyte)(ny * 127.5 + 127.5);  tex[2] = (GLubyte)(nz * 127.5 + 127.5);  tex[3] = 255;}/*** ³‹K‰»ƒ}ƒbƒv‚Ìì¬*/void makeNormalizeMap(GLubyte *tex[], int width, int height){  int i = 0;    for (int v = 0; v < height; ++v) {    float y = (float)(v + v - height) / (float)height;    float y2 = y * y;        for (int u = 0; u < width; ++u) {      float x = (float)(u + u - width) / (float)width;      float x2 = x * x;            /* •ûŒüƒxƒNƒgƒ‹ */      float r = 1.0f / sqrtf(x2 + y2 + 1.0f);      float s = x * r;      float t = y * r;            /* ‚U–Ê‚ÌƒeƒNƒXƒ`ƒƒ‚É‚Â‚¢‚Ä•ûŒüƒxƒNƒgƒ‹‚ğŠi”[‚·‚é */      vec2tex(-r, -t,  s, tex[0] + i);  /* negative x */      vec2tex( s, -r, -t, tex[1] + i);  /* negative y */      vec2tex(-s, -t, -r, tex[2] + i);  /* negative z */      vec2tex( r, -t, -s, tex[3] + i);  /* positive x */      vec2tex( s,  r,  t, tex[4] + i);  /* positive y */      vec2tex( s, -t,  r, tex[5] + i);  /* positive z */            i += 4;    }  }}
+ï»¿#include <math.h>
+#if defined(WIN32)
+#  include "glut.h"
+#elif defined(__APPLE__) || defined(MACOSX)
+#  include <GLUT/glut.h>
+#else
+#  include <GL/glut.h>
+#endif
+
+#include "normalizemap.h"
+
+/*
+** æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’ãƒ†ã‚¯ã‚¹ãƒãƒ£å€¤ã«å¤‰æ›ã™ã‚‹
+*/
+static void vec2tex(float nx, float ny, float nz, GLubyte tex[]) 
+{
+  tex[0] = (GLubyte)(nx * 127.5 + 127.5);
+  tex[1] = (GLubyte)(ny * 127.5 + 127.5);
+  tex[2] = (GLubyte)(nz * 127.5 + 127.5);
+  tex[3] = 255;
+}
+
+/*
+** æ­£è¦åŒ–ãƒãƒƒãƒ—ã®ä½œæˆ
+*/
+void makeNormalizeMap(GLubyte *tex[], int width, int height)
+{
+  int i = 0;
+  
+  for (int v = 0; v < height; ++v) {
+    float y = (float)(v + v - height) / (float)height;
+    float y2 = y * y;
+    
+    for (int u = 0; u < width; ++u) {
+      float x = (float)(u + u - width) / (float)width;
+      float x2 = x * x;
+      
+      /* æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ« */
+      float r = 1.0f / sqrtf(x2 + y2 + 1.0f);
+      float s = x * r;
+      float t = y * r;
+      
+      /* ï¼–é¢ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã¤ã„ã¦æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ ¼ç´ã™ã‚‹ */
+      vec2tex(-r, -t,  s, tex[0] + i);  /* negative x */
+      vec2tex( s, -r, -t, tex[1] + i);  /* negative y */
+      vec2tex(-s, -t, -r, tex[2] + i);  /* negative z */
+      vec2tex( r, -t, -s, tex[3] + i);  /* positive x */
+      vec2tex( s,  r,  t, tex[4] + i);  /* positive y */
+      vec2tex( s, -t,  r, tex[5] + i);  /* positive z */
+      
+      i += 4;
+    }
+  }
+}

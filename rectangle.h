@@ -1,1 +1,4 @@
-/*** ‹éŒ`‚Ì•`‰æ*/extern void rectangle(double w, double h, const float l[]);
+ï»¿/*
+** çŸ©å½¢ã®æç”»
+*/
+extern void rectangle(double w, double h, const float l[]);
