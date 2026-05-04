@@ -14,7 +14,16 @@ PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
 #  include <GL/glut.h>
 #endif
 
+/* トラックボール処理用関数の宣言 */
+#include "trackball.h"
+
+/* 矩形を描く関数の宣言 */
+#include "rectangle.h"
+
+/* 法線マップ */
 #include "normalmap.h"
+
+/* 正規化マップ */
 #include "normalizemap.h"
 
 /*
@@ -118,12 +127,6 @@ static void init(void)
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
 }
-
-/* トラックボール処理用関数の宣言 */
-#include "trackball.h"
-
-/* 矩形を描く関数の宣言 */
-#include "rectangle.h"
 
 /*
 ** シーンの描画
