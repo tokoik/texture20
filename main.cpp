@@ -56,16 +56,6 @@ static void init()
 
   /* テクスチャの読み込みに使う配列 */
   GLubyte texture[TEXHEIGHT * TEXWIDTH * 4];
-  FILE *fp;
-
-  /* テクスチャ画像の読み込み */
-  if ((fp = fopen(texture_file, "rb")) != NULL) {
-    fread(texture, sizeof texture, 1, fp);
-    fclose(fp);
-  }
-  else {
-    perror(texture_file);
-  }
 
 #if defined(_WIN32)
   glActiveTexture =
@@ -79,27 +69,6 @@ static void init()
   /* テクスチャ名を３つ作る */
   GLuint texname[3];
   glGenTextures(3, texname);
-
-  /*
-  ** テクスチャユニット２に拡散反射率マップを設定する
-  */
-  glActiveTexture(GL_TEXTURE2);
-  glBindTexture(GL_TEXTURE_2D, texname[0]);
-
-  /* テクスチャの割り当て */
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXWIDTH, TEXHEIGHT, 0,
-    GL_RGBA, GL_UNSIGNED_BYTE, texture);
-
-  /* テクスチャを拡大・縮小する方法の指定 */
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-  /* テクスチャの繰り返し方法の指定 */
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-  /* テクスチャユニット２のテクスチャ環境 */
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
   /*
   ** テクスチャユニット０に法線マップを設定する
@@ -168,17 +137,45 @@ static void init()
   glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
   glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
 
+  /*
+  ** テクスチャユニット２に拡散反射率マップを設定する
+  */
+  glActiveTexture(GL_TEXTURE2);
+  glBindTexture(GL_TEXTURE_2D, texname[0]);
+
+  /* テクスチャ画像の読み込み */
+  FILE *fp;
+  if ((fp = fopen(texture_file, "rb")) != NULL) {
+    fread(texture, sizeof texture, 1, fp);
+    fclose(fp);
+  }
+  else {
+    perror(texture_file);
+  }
+
+  /* テクスチャの割り当て */
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXWIDTH, TEXHEIGHT, 0,
+    GL_RGBA, GL_UNSIGNED_BYTE, texture);
+
+  /* テクスチャを拡大・縮小する方法の指定 */
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+  /* テクスチャの繰り返し方法の指定 */
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  /* テクスチャユニット２のテクスチャ環境 */
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
   /* 初期設定 */
   glClearColor(0.3f, 0.3f, 1.0f, 0.0f);
   glEnable(GL_DEPTH_TEST);
   glDisable(GL_CULL_FACE);
+
+  /* 光源の初期設定 */
+  glDisable(GL_LIGHTING);
 }
-
-/* トラックボール処理用関数の宣言 */
-#include "trackball.h"
-
-/* 矩形を描く関数の宣言 */
-#include "rectangle.h"
 
 /*
 ** シーンの描画

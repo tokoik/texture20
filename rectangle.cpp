@@ -32,14 +32,13 @@ void rectangle(double w, double h, const float l[])
     { 0.0, 0.0 }, { 1.0, 0.0 }, { 1.0, 1.0 }, { 0.0, 1.0 }
   };
   
-  /* 光線ベクトルの算出に用いる変数 */
-  double m[16], lpos[4] = { l[0], l[1], l[2], l[3] };
-  
-  /* 現在のモデルビュー変換行列を求める */
+  /* 現在のモデルビュー変換行列の逆行列を求める */
+  double m[16];
   glGetDoublev(GL_MODELVIEW_MATRIX, m);
-  
-  /* 接空間における光源位置を求める */
   inverse(m, m);
+
+  /* 接空間（ローカル座標系）における光源位置を求める */
+  double lpos[4] = { l[0], l[1], l[2], l[3] };
   transform(lpos, m, lpos);
   
   /* 平行光線でなければ実座標を求めておく */
@@ -53,8 +52,11 @@ void rectangle(double w, double h, const float l[])
   glBegin(GL_QUADS);
   
   for (int i = 0; i < 4; ++i) {
+
     /* 法線マップのテクスチャ座標を設定する */
-    glTexCoord2dv(texcoord[i]);
+    glMultiTexCoord2dv(GL_TEXTURE0, texcoord[i]);
+
+    /* 拡散反射率マップのテクスチャ座標を設定する */
     glMultiTexCoord2dv(GL_TEXTURE2, texcoord[i]);
     
     /* 接空間における光源の方向ベクトルを
