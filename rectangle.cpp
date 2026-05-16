@@ -1,12 +1,14 @@
-﻿#if defined(WIN32)
-#  include "glut.h"
-#  include "glext.h"
-extern PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
-#elif defined(__APPLE__) || defined(MACOSX)
+﻿#if defined(__APPLE__) || defined(MACOSX)
+#  define GL_SILENCE_DEPRECATION
 #  include <GLUT/glut.h>
+#  include <OpenGL/glext.h>
 #else
-#  define GL_GLEXT_PROTOTYPES
 #  include <GL/glut.h>
+#  include <GL/glext.h>
+#  if defined(_WIN32)
+extern PFNGLMULTITEXCOORD2DVPROC glMultiTexCoord2dv;
+extern PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
+#  endif
 #endif
 
 #include "rectangle.h"
@@ -53,6 +55,7 @@ void rectangle(double w, double h, const float l[])
   for (int i = 0; i < 4; ++i) {
     /* 法線マップのテクスチャ座標を設定する */
     glTexCoord2dv(texcoord[i]);
+    glMultiTexCoord2dv(GL_TEXTURE2, texcoord[i]);
     
     /* 接空間における光源の方向ベクトルを
        正規化マップのテクスチャ座標に設定する */
