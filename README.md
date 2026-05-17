@@ -131,12 +131,10 @@ transform(lpos, m, lpos);
 - テクスチャユニット１（正規化マップ）には、接空間における光源の方向ベクトル（頂点から光源へのベクトル）を3次元のテクスチャ座標（`glMultiTexCoord3d()`）として設定します。これにより、キューブマッピングを用いてこのベクトルがピクセル単位で正規化され、光源ベクトルとして法線ベクトルとの内積計算に使用されます。
 
 > **補足 (Windows の場合):**
-> `glMultiTexCoord*()` や `glActiveTexture()` は OpenGL 1.3 以降の機能であるため、Windows 標準の `gl.h` には宣言が含まれていません。そのため、`glext.h` をインクルードし、`wglGetProcAddress()` を用いて関数のポインタを取得してから使用しています。
+> `glMultiTexCoord*()` や `glActiveTexture()` は OpenGL 1.3 以降の機能であるため、Windows 標準の gl.h には宣言が含まれていません。そのため、glext.h をインクルードし、`wglGetProcAddress()` を用いて関数のポインタを取得してから使用しています。
 
 ### 4.3 描画時のマルチテクスチャの有効化 (`scene()` 関数)
 
 図形を描画する際には、各テクスチャユニットを順次アクティブにして、それぞれマッピング機能を有効化（`glEnable()`）します。テクスチャユニット０とテクスチャユニット２は2次元テクスチャであるため `GL_TEXTURE_2D` を有効化し、テクスチャユニット１はキューブマッピングによる正規化マップであるため `GL_TEXTURE_CUBE_MAP` を有効化します。
 
-なお、バンプマッピングの内積計算によって陰影を求めるため、通常の陰影付け（`GL_LIGHTING`）は `init()` 関数内で無効化（`glDisable(` `GL_LIGHTING` `)`）されています。
-
-![バンプマッピング](https://tokoik.github.io/blog/assets/images/texture20.webp)
+なお、バンプマッピングの内積計算によって陰影を求めるため、通常の陰影付け（`GL_LIGHTING`）は `init()` 関数内で無効化（`glDisable(` `GL_LIGHTING` `)`）しています。
