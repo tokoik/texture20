@@ -144,8 +144,8 @@ static void init()
   glBindTexture(GL_TEXTURE_2D, texname[0]);
 
   /* テクスチャ画像の読み込み */
-  FILE *fp;
-  if ((fp = fopen(texture_file, "rb")) != NULL) {
+  FILE* fp = fopen(texture_file, "rb");
+  if (fp != NULL) {
     fread(texture, sizeof texture, 1, fp);
     fclose(fp);
   }
