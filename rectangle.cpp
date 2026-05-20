@@ -5,7 +5,7 @@
 #else
 #  include <GL/glut.h>
 #  include <GL/glext.h>
-#  if defined(_WIN32)
+#  if defined(_MSC_VER)
 extern PFNGLMULTITEXCOORD2DVPROC glMultiTexCoord2dv;
 extern PFNGLMULTITEXCOORD3DPROC glMultiTexCoord3d;
 #  endif
