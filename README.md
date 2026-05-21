@@ -6,7 +6,7 @@
 
 - [第２４回 バンプマッピング](https://tokoik.github.io/blog/%E3%83%86%E3%82%AF%E3%82%B9%E3%83%81%E3%83%A3%E5%85%A5%E9%96%80/2005/08/26/texture.html)
 
-![バンプマッピング](https://tokoik.github.io/blog/assets/images/texture20.webp)
+![バンプマッピング](https://tokoik.github.io/blog/assets/images/texture/texture20.webp)
 
 ## 2. ビルド方法
 
