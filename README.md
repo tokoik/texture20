@@ -4,7 +4,7 @@
 
 このプログラムは、OpenGL における「テクスチャマッピング (Texture Mapping)」の基礎を学ぶための、学生向けのサンプルプログラムです。本プログラムは、以下のブログ記事のサンプルプログラムです。
 
-- [第２４回 バンプマッピング](https://tokoik.github.io/blog/%E3%83%86%E3%82%AF%E3%82%B9%E3%83%81%E3%83%A3%E5%85%A5%E9%96%80/2005/08/26/texture.html)
+- [第２４回 バンプマッピング](https://tokoik.github.io/blog/2005-08-26.html)
 
 ![バンプマッピング](https://tokoik.github.io/blog/assets/images/texture/texture20.webp)
 
